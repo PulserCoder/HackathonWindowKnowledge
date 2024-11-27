@@ -9,8 +9,10 @@ import ru.hackteam.window_of_knowledge.models.ChatGPTConversation;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @Service
 public class ChatGPTDialog {
@@ -21,6 +23,44 @@ public class ChatGPTDialog {
     public ChatGPTDialog(
             @Qualifier("saveConversation") RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+    }
+
+    public String getRelevantAnswer(String question, List<String> answers) {
+        StringBuilder result = new StringBuilder();
+
+        // Создаем список сообщений для текущего запроса
+        List<Map<String, Object>> conversationHistory = new ArrayList<>();
+
+        // Добавляем системное сообщение с инструкцией
+        Map<String, Object> systemMessage = new HashMap<>();
+        systemMessage.put("role", "system");
+        systemMessage.put("content", "Твоя задача - проверить, есть ли ответ на вопрос в тексте. Если есть, отправь '+', если нет, отправь '-'");
+        conversationHistory.add(systemMessage);
+
+        for (String answer : answers) {
+            try {
+                // Добавляем пользовательское сообщение с вопросом и ответом
+                Map<String, Object> userMessage = new HashMap<>();
+                userMessage.put("role", "user");
+                userMessage.put("content", "Текст: " + "\n" +  answer);
+                conversationHistory.add(userMessage);
+
+                // Отправляем запрос в GPT
+                String gptResponse = ChatGPTClient.sendRequest(conversationHistory);
+
+                // Добавляем ответ GPT к результатам
+                if (gptResponse.contains("+")) {
+                    result.append(" ");
+                    result.append(gptResponse);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                result.append("E"); // Добавляем 'E' в случае ошибки
+            }
+        }
+
+        return result.toString();
     }
 
     public String sendMessage(String prompt, String conversationId) throws Exception {
