@@ -32,11 +32,13 @@ public class RedisConfig {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
+        // Используем Jackson2JsonRedisSerializer для сериализации/десериализации
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+
         template.setValueSerializer(serializer);
         template.setHashValueSerializer(serializer);
-
         template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
 
         return template;
     }

@@ -24,6 +24,6 @@ public class AnswerController {
 
     @PostMapping(path = "/ask")
     public String answerForUserQuestion(@RequestBody String question) throws Exception {
-        return dialog.sendMessage(question, "conversationId");
+        return dialog.sendMessage(question, "435");
     }
 }

@@ -35,7 +35,8 @@ public class ChatGPTDialog {
     }
 
     private List<Map<String, Object>> getConversationHistory(String conversationId) {
-        List<Map<String, Object>> conversationHistory = (List<Map<String, Object>>) redisTemplate.opsForValue().get(conversationId);
+        List<Map<String, Object>> conversationHistory =
+                (List<Map<String, Object>>) redisTemplate.opsForValue().get(conversationId);
 
         if (conversationHistory == null) {
             conversationHistory = new ArrayList<>();
@@ -43,6 +44,7 @@ public class ChatGPTDialog {
 
         return conversationHistory;
     }
+
 
     private void addUserMessageToHistory(List<Map<String, Object>> conversationHistory, String prompt) {
         Map<String, Object> userMessage = Map.of(
@@ -61,7 +63,7 @@ public class ChatGPTDialog {
     }
 
     private void saveConversationToRedis(String conversationId, List<Map<String, Object>> conversationHistory) {
-        ChatGPTConversation conversation = new ChatGPTConversation(conversationId, conversationHistory);
-        redisTemplate.opsForValue().set(conversationId, conversation);
+        redisTemplate.opsForValue().set(conversationId, conversationHistory);
     }
+
 }
