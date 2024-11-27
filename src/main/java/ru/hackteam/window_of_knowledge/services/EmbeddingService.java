@@ -1,5 +1,6 @@
 package ru.hackteam.window_of_knowledge.services;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import ru.hackteam.window_of_knowledge.api_openai.OpenAIEmbeddingsAPI;
@@ -14,7 +15,8 @@ public class EmbeddingService {
     private final OpenAIEmbeddingsAPI openAIEmbeddingsAPI;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public EmbeddingService(OpenAIEmbeddingsAPI openAIEmbeddingsAPI, RedisTemplate<String, Object> redisTemplate) {
+    public EmbeddingService(OpenAIEmbeddingsAPI openAIEmbeddingsAPI,
+                            @Qualifier("redisTemplateEmbeddings") RedisTemplate<String, Object> redisTemplate) {
         this.openAIEmbeddingsAPI = openAIEmbeddingsAPI;
         this.redisTemplate = redisTemplate;
     }
