@@ -6,6 +6,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class TextFileServiceImpl implements ExtractData {
     public String saveDataToBd(MultipartFile avatar) {
-        return "Ваш excel файл добавлен с форматом: " + avatar;
+        return "Ваш text файл добавлен с форматом: " + avatar;
     }
 }
