@@ -1,8 +1,7 @@
-package ru.hackteam.window_of_knowledge.service;
+package ru.hackteam.window_of_knowledge.services;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import ru.hackteam.window_of_knowledge.model.Question;
+import ru.hackteam.window_of_knowledge.models.Question;
 @Service
 public class AnswerService {
 

@@ -1,9 +1,9 @@
-package ru.hackteam.window_of_knowledge.controller;
+package ru.hackteam.window_of_knowledge.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.hackteam.window_of_knowledge.model.Question;
-import ru.hackteam.window_of_knowledge.service.AnswerService;
+import ru.hackteam.window_of_knowledge.models.Question;
+import ru.hackteam.window_of_knowledge.services.AnswerService;
 
 @RequestMapping(path = "question")
 @RestController

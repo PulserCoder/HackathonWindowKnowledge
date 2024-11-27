@@ -1,4 +1,4 @@
-package ru.hackteam.window_of_knowledge.model;
+package ru.hackteam.window_of_knowledge.models;
 
 public class Question {
     private String guestion; // Замените на 'question', если хотите

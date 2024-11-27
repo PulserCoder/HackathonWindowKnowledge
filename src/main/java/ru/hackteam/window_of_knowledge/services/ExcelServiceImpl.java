@@ -1,4 +1,4 @@
-package ru.hackteam.window_of_knowledge.service;
+package ru.hackteam.window_of_knowledge.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
