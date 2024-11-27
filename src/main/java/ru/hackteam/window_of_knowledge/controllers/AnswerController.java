@@ -11,19 +11,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import java.io.IOException;
+
 @RequestMapping(path = "question")
 @RestController
 public class AnswerController {
 
     private final ChatGPTDialog dialog;
+    private final AnswerService answerService;
 
     @Autowired
-    public AnswerController(ChatGPTDialog dialog) {
+    public AnswerController(ChatGPTDialog dialog, AnswerService answerService) {
         this.dialog = dialog;
+        this.answerService = answerService;
     }
 
-    @PostMapping(path = "/ask")
-    public String answerForUserQuestion(@RequestBody String question) throws Exception {
-        return dialog.sendMessage(question, "conversationId");
+    @PostMapping(path = "/ask/{assistant_id}/{conversation_id}")
+    public String answerForUserQuestion(@RequestBody Question question,
+                                        @PathVariable("assistant_id") String assistantId,
+                                        @PathVariable("conversation_id") String conversationId) throws IOException, InterruptedException {
+        return answerService.getAnswer(question, assistantId, conversationId);
     }
 }
