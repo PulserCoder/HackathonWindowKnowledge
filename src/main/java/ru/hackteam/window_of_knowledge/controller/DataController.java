@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.hackteam.window_of_knowledge.model.TextData;
-import ru.hackteam.window_of_knowledge.service.*;
+import ru.hackteam.window_of_knowledge.models.TextData;
+import ru.hackteam.window_of_knowledge.services.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "data")
@@ -34,7 +36,7 @@ public class DataController {
     }
 
     @PostMapping(path = "text")
-    public String saveTextFormat(@RequestBody TextData textData) {
+    public List<String> saveTextFormat(@RequestBody TextData textData) {
         return textServiceImpl.saveTextToBd(textData);
     }
 
