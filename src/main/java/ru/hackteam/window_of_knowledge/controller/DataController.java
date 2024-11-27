@@ -16,11 +16,15 @@ public class DataController {
     private ExtractData extractData;
     @Autowired
     public TextServiceImpl textServiceImpl;
+    @Autowired
+    public ExcelServiceImpl excelServiceImpl;
+
+    @Autowired
+    private PdfService pdfService;
 
     @PostMapping(value = "excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveExcelFormat(@RequestParam MultipartFile avatar) {
-        extractData = new ExcelServiceImpl();
-        return extractData.saveDataToBd(avatar);
+    public String saveExcelFormat(@RequestParam MultipartFile avatar, @RequestParam(required = false) String startCell1, @RequestParam(required = false) String startCell2) {
+        return excelServiceImpl.saveDataToBd(avatar, startCell1, startCell2);
     }
 
     @PostMapping(value = "notion", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -40,6 +44,12 @@ public class DataController {
         return textServiceImpl.saveTextToBd(textData);
     }
 
+
+    @PostMapping(value = "pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public String convertPdf(@RequestParam("file") MultipartFile file, @RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
+                             @RequestParam(value = "endPage", required = false,  defaultValue = "0") Integer endPage) {
+        return pdfService.convertPdfToText(file, startPage, endPage);
+    }
 }
 
 

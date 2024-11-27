@@ -8,4 +8,5 @@ public class TextFileServiceImpl implements ExtractData {
     public String saveDataToBd(MultipartFile avatar) {
         return "Ваш text файл добавлен с форматом: " + avatar;
     }
+
 }
