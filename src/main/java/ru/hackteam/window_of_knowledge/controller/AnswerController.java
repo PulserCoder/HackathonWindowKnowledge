@@ -11,5 +11,4 @@ public class AnswerController {
     public String answerForUserQuestion(@RequestBody Question question) {
         return "Вот наш ответ на вопрос: " + question.getGuestion();
     }
-
 }
