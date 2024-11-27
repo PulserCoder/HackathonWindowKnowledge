@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.hackteam.window_of_knowledge.services.EmbeddingService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,7 +31,17 @@ public class EmbeddingController {
     }
 
     @GetMapping("/{id}")
-    public Map<String, Object> getCompanyData(@PathVariable String id) {
-        return embeddingService.getCompanyData(id);
+    public List<Map<String, Object>> getEmbeddings(@PathVariable String id) {
+        return embeddingService.getEmbeddings(id);
+    }
+
+    @PostMapping("/find-relevant")
+    public List<Map<String, Object>> findRelevantTexts(@RequestParam String id, @RequestParam String text) {
+        try {
+            return embeddingService.findTopRelevantTexts(id, text);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error processing relevance: " + e.getMessage());
+        }
     }
 }

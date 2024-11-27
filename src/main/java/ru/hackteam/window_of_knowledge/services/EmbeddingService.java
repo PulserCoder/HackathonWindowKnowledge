@@ -7,7 +7,9 @@ import ru.hackteam.window_of_knowledge.api_openai.OpenAIEmbeddingsAPI;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -16,7 +18,7 @@ public class EmbeddingService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     public EmbeddingService(OpenAIEmbeddingsAPI openAIEmbeddingsAPI,
-                            @Qualifier("redisTemplateEmbeddings") RedisTemplate<String, Object> redisTemplate) {
+                            @Qualifier("redisTemplateForEmbeddings") RedisTemplate<String, Object> redisTemplate) {
         this.openAIEmbeddingsAPI = openAIEmbeddingsAPI;
         this.redisTemplate = redisTemplate;
     }
@@ -28,22 +30,55 @@ public class EmbeddingService {
     }
 
     private void saveToRedis(String id, String text, double[] embeddings) {
+        Map<String, Object> embeddingData = new HashMap<>();
+        embeddingData.put("text", text);
+        embeddingData.put("vector", embeddings);
 
-        Map<String, Object> companyData = (Map<String, Object>) redisTemplate.opsForValue().get(id);
-        if (companyData == null) {
-            companyData = new HashMap<>();
-            companyData.put("id", id);
-            companyData.put("texts", new HashMap<String, double[]>());
+        redisTemplate.opsForList().rightPush(id, embeddingData);
+    }
+
+    public List<Map<String, Object>> getEmbeddings(String id) {
+        List<Object> rawList = redisTemplate.opsForList().range(id, 0, -1);
+        return rawList != null ? rawList.stream()
+                .map(obj -> (Map<String, Object>) obj)
+                .toList() : List.of();
+    }
+
+    private double cosineSimilarity(double[] vectorA, double[] vectorB) {
+        if (vectorA.length != vectorB.length) {
+            throw new IllegalArgumentException("Vectors must have the same dimensions");
         }
 
-        Map<String, double[]> texts = (Map<String, double[]>) companyData.get("texts");
-        texts.put(text, embeddings);
+        double dotProduct = 0.0;
+        double normA = 0.0;
+        double normB = 0.0;
 
-        redisTemplate.opsForValue().set(id, companyData);
+        for (int i = 0; i < vectorA.length; i++) {
+            dotProduct += vectorA[i] * vectorB[i];
+            normA += Math.pow(vectorA[i], 2);
+            normB += Math.pow(vectorB[i], 2);
+        }
+
+        normA = Math.sqrt(normA);
+        normB = Math.sqrt(normB);
+
+        return dotProduct / (normA * normB);
     }
 
-    public Map<String, Object> getCompanyData(String id) {
-        return (Map<String, Object>) redisTemplate.opsForValue().get(id);
+    public List<Map<String, Object>> findTopRelevantTexts(String id, String text) throws IOException, InterruptedException {
+        double[] queryVector = openAIEmbeddingsAPI.getEmbeddings(text);
+        List<Map<String, Object>> embeddingsList = getEmbeddings(id);
+        List<Map<String, Object>> scoredTexts = embeddingsList.stream()
+                .map(entry -> {
+                    double[] storedVector = (double[]) entry.get("vector");
+                    double similarity = cosineSimilarity(queryVector, storedVector);
+                    entry.put("similarity", similarity);
+                    return entry;
+                })
+                .sorted((a, b) -> Double.compare((double) b.get("similarity"), (double) a.get("similarity")))
+                .collect(Collectors.toList());
+
+        return scoredTexts.stream().limit(5).toList();
     }
+
 }
-
