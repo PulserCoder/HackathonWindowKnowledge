@@ -4,8 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-public class ExcelService implements ExtractDataImpl {
-    public String saveBuddingToBd(MultipartFile avatar) {
+public class TextFileServiceImpl implements ExtractData {
+    public String saveDataToBd(MultipartFile avatar) {
         return "Ваш excel файл добавлен с форматом: " + avatar;
     }
 }
