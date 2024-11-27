@@ -1,8 +1,6 @@
 package ru.hackteam.window_of_knowledge.api_openai;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +16,7 @@ import java.util.Map;
 
 
 @Service
-public class OpenAIEmbeddings {
+public class OpenAIEmbeddingsAPI {
     private final ObjectMapper objectMapper;
     private final String API_KEY = System.getenv("API_KEY");
     @Value(value = "${api.url.embeddings}")
@@ -27,7 +25,7 @@ public class OpenAIEmbeddings {
     private final HttpClient httpClient;
 
 
-    public OpenAIEmbeddings() {
+    public OpenAIEmbeddingsAPI() {
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
     }
@@ -62,23 +60,5 @@ public class OpenAIEmbeddings {
         return embeddingList.stream().mapToDouble(Double::doubleValue).toArray();
 
 
-    }
-
-    public double getCosineSimilarity(double[] vectorA, double[] vectorB) {
-        if (vectorA.length != vectorB.length) {
-            throw new IllegalArgumentException("Векторы должны быть одинаковой длины");
-        }
-
-        double dotProduct = 0.0;
-        double normA = 0.0;
-        double normB = 0.0;
-
-        for (int i = 0; i < vectorA.length; i++) {
-            dotProduct += vectorA[i] * vectorB[i];
-            normA += Math.pow(vectorA[i], 2);
-            normB += Math.pow(vectorB[i], 2);
-        }
-
-        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 }
