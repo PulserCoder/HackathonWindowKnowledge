@@ -9,11 +9,9 @@ import java.util.Map;
 @Getter
 @Setter
 public class ChatGPTConversation {
-    private String conversationId;
     private List<Map<String, Object>> context;
 
-    public ChatGPTConversation(String conversationId, List<Map<String, Object>> context) {
-        this.conversationId = conversationId;
+    public ChatGPTConversation(List<Map<String, Object>> context) {
         this.context = context;
     }
 }
