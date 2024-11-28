@@ -20,6 +20,9 @@ public class DataController {
     public ExcelServiceImpl excelServiceImpl;
 
     @Autowired
+    public DocxService docxService;
+
+    @Autowired
     public TextFileServiceImpl textFileService;
 
     @Autowired
@@ -52,6 +55,15 @@ public class DataController {
                                    @RequestParam(value = "endPage", required = false,  defaultValue = "0") Integer endPage) {
         return pdfService.convertPdfToText(file, startPage, endPage);
     }
+
+    @PostMapping(value = "docx-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<String> saveDocxFiletFormat(@RequestParam MultipartFile avatar) {
+        return docxService.processDocxFile(avatar);
+    }
+
+
+
+
 }
 
 
