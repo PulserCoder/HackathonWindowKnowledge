@@ -17,7 +17,10 @@ public class ChatGPTClient {
 
     @Value("${base_url}")
     private String baseUrl;
-    private static final String API_KEY = System.getenv("API_KEY");
+
+    @Value("${API_KEY}")
+    private String API_KEY;
+
     private static final String MODEL = "gpt-4";
 
 

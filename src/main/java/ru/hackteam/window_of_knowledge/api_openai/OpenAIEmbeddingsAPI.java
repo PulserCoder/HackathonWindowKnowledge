@@ -18,7 +18,10 @@ import java.util.Map;
 @Service
 public class OpenAIEmbeddingsAPI {
     private final ObjectMapper objectMapper;
-    private final String API_KEY = System.getenv("API_KEY");
+
+    @Value("${API_KEY}")
+    private String API_KEY;
+
     @Value(value = "${api.url.embeddings}")
     private String API_URL;
 
