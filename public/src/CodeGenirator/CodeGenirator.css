@@ -1,0 +1,60 @@
+/* Общий контейнер */
+.embed-code-container {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Кнопка генерации кода */
+.embed-code-container button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-bottom: 20px;
+}
+
+.embed-code-container button:hover {
+    background-color: #0056b3;
+}
+
+
+//* Улучшенный стиль для textarea */
+.embed-code-container .code-block textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f7f7f7;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    resize: vertical;
+}
+
+/* Изменения при фокусе на textarea */
+.embed-code-container .code-block textarea:focus {
+    background-color: #fff;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5), inset 0 0 5px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+/* Эффект на наведение */
+.embed-code-container .code-block textarea:hover {
+    border-color: #007bff;
+    background-color: #f1f1f1;
+}

@@ -1,0 +1,52 @@
+:root {
+    --backgroundColorSite: #c3bbbb;
+    --backgroundColor: #f9f9f9;
+    --messageAreaBg: #ffffff;
+    --messageShadow: rgba(0, 0, 0, 0.1);
+    --clientBubbleBg: #007bff;
+    --clientBubbleText: #fff;
+    --supportBubbleBg: #e5e5e5;
+    --supportBubbleText: #000;
+    --inputBorder: #ccc;
+    --buttonBg: #007bff;
+    --buttonBgHover: #0056b3;
+    --fontFamily: Arial, sans-serif;
+    --buttonHeight: 5vh;
+    --buttonWidth: 5vw;
+    --buttonMargin: 10px;
+    --chatPrewHeight: 55vh;
+    --chatPrewWidth: 30vw;
+    --buttonOpenRadius: 10%;
+}
+
+body {
+    background-color: var(--backgroundColorSite);
+    font-family: var(--fontFamily);
+}
+
+.message-area {
+    background-color: var(--messageAreaBg);
+    box-shadow: 0 4px 6px var(--messageShadow);
+}
+
+.client-bubble {
+    background-color: var(--clientBubbleBg);
+    color: var(--clientBubbleText);
+}
+
+.support-bubble {
+    background-color: var(--supportBubbleBg);
+    color: var(--supportBubbleText);
+}
+
+input {
+    border: 1px solid var(--inputBorder);
+}
+
+button {
+    background-color: var(--buttonBg);
+}
+
+button:hover {
+    background-color: var(--buttonBgHover);
+}

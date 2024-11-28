@@ -1,0 +1,146 @@
+/* Основной контейнер настроек */
+.settings-container {
+    max-width: 600px;
+    margin: 20px;
+    padding: 20px;
+    height: 90vh;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    overflow-y: auto; /* Вертикальный скролл */
+    overflow-x: hidden; /* Убрать горизонтальный скролл */
+}
+
+/* Заголовок настроек */
+.settings-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Элемент с настройкой цвета */
+.settings-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Лейбл для каждого элемента */
+.settings-item label {
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Ввод цвета */
+.settings-item input[type="color"] {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Ввод для шрифта */
+.settings-item input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-left: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* При фокусе на текстовом поле */
+.settings-item input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Кнопка для открытия чата */
+.chat-open-button {
+    position: fixed;
+    bottom: 10px;  /* Отступ от нижнего края */
+    right: 20px;
+    margin-bottom: var(--buttonMargin)
+}
+
+.chat-open-button button{
+    height: var(--buttonHeight);
+    width: var(--buttonWidth);
+    border-radius: var(--buttonOpenRadius);
+    overflow: hidden;
+    font-size: 90%;
+}
+
+
+
+/* Стили для мини-чата на странице настроек */
+.preview-chat .chat-container {
+    position: fixed;
+    bottom: calc((var(--buttonHeight) + var(--buttonMargin) * 1.2) + 25px);  /* Увеличен отступ снизу, чтобы чат не перекрывал кнопку */
+    right: 20px;
+    width: var(--chatPrewWidth);
+    height: var(--chatPrewHeight);
+    background: var(--backgroundColor);
+    font-family: var(--fontFamily);
+    display: flex;
+    flex-direction: column;
+    padding: 0.5%;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Сообщения мини-чата */
+.preview-chat .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 2%;
+    padding: 2%;
+    background: var(--messageAreaBg);
+    border-radius: 1%;
+    box-shadow: inset 0 0 5px var(--messageShadow);
+    font-size: 1rem; /* Размер шрифта в области сообщений */
+}
+
+/* Индивидуальные сообщения мини-чата */
+.preview-chat .chat-message {
+    margin: 2% 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.preview-chat .chat-message.user {
+    justify-content: flex-end;
+}
+
+/* Сообщения от клиента */
+.preview-chat .chat-message.user .chat-bubble {
+    background: var(--clientBubbleBg);
+    color: var(--clientBubbleText);
+}
+
+/* Сообщения от поддержки */
+.preview-chat .chat-message.assistant .chat-bubble {
+    background: var(--supportBubbleBg);
+    color: var(--supportBubbleText);
+}
+
+
+
+
+.preview-chat .chat-send-button:hover {
+    background: var(--buttonBgHover);
+}
+
+.codeGenirator{
+    display: flex;
+    margin-top: 20px;
+}
+
+
+.loader{
+    right: 20px;
+}
