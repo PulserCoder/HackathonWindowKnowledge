@@ -7,11 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PdfService {
 
-    public String convertPdfToText(MultipartFile pdfFile, int startPage, int endPage) {
+    public List<String> convertPdfToText(MultipartFile pdfFile, int startPage, int endPage) {
         String extractedText = "";
 
         try (InputStream inputStream = pdfFile.getInputStream();
@@ -35,11 +37,36 @@ public class PdfService {
             // Извлечение текста из PDF
             extractedText = pdfStripper.getText(document);
 
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
-            return "Ошибка при обработке PDF файла: " + e.getMessage();
+            System.out.println(e.getMessage());
         }
 
-        return extractedText;
+        String[] words = extractedText.split("\\s+"); // Разделение строки на слова
+        List<String> chunks = new ArrayList<>();
+
+        StringBuilder chunk = new StringBuilder();
+        int wordCount = 0;
+
+        for (String word : words) {
+            chunk.append(word).append(" ");
+            wordCount++;
+
+            // Если достигли 200 слов или конец текста, добавляем в список
+            if (wordCount == 200) {
+                chunks.add(chunk.toString().trim());
+                chunk.setLength(0); // Очистка StringBuilder
+                wordCount = 0;
+            }
+
+        }
+
+        if (chunk.length() > 0) {
+            chunks.add(chunk.toString().trim());
+        }
+
+        return chunks;
     }
 }
+

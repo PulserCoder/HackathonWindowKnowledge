@@ -46,8 +46,8 @@ public class DataController {
 
 
     @PostMapping(value = "pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String convertPdf(@RequestParam("file") MultipartFile file, @RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
-                             @RequestParam(value = "endPage", required = false,  defaultValue = "0") Integer endPage) {
+    public List<String> convertPdf(@RequestParam("file") MultipartFile file, @RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
+                                   @RequestParam(value = "endPage", required = false,  defaultValue = "0") Integer endPage) {
         return pdfService.convertPdfToText(file, startPage, endPage);
     }
 }
