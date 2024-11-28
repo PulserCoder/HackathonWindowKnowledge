@@ -82,7 +82,7 @@
     ```bash
     npm run dev
     ```
-
+передите на /conf
 ---
 
 ## Start Back-end
