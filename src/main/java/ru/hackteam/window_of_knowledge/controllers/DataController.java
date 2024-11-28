@@ -10,6 +10,7 @@ import ru.hackteam.window_of_knowledge.services.*;
 import java.io.IOException;
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path = "data")
 public class DataController {

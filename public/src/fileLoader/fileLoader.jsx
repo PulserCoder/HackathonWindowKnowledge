@@ -1,94 +1,102 @@
 import React, { useState } from 'react';
-import * as XLSX from "xlsx";
 import './fileLoader.css';
+import axios from "axios";
 
 const FileLoader = () => {
     const [pdfFile, setPdfFile] = useState(null);
-    const [excelData, setExcelData] = useState([]);
+    const [docxData, setDocxData] = useState(null);
     const [txtData, setTxtData] = useState(""); // State to store TXT file content
 
-    const handleFileUpload = (e) => {
+    const handleFileUpload = async (e) => {
         const file = e.target.files[0];
-        const fileType = file.name.split('.').pop();
+        const fileType = file.name.split('.').pop().toLowerCase();
 
         if (fileType === 'pdf') {
-            setPdfFile(file); // We just store the PDF file, but no preview
-        } else if (fileType === 'xls' || fileType === 'xlsx') {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: "array" });
-                const sheetName = workbook.SheetNames[0];
-                const sheet = workbook.Sheets[sheetName];
-                setExcelData(XLSX.utils.sheet_to_json(sheet));
-            };
-            reader.readAsArrayBuffer(file);
+            setPdfFile(file);
+
+            // Формируем данные для отправки
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const response = await axios.post(
+                    'http://localhost:8080/data/pdf?startPage=0&endPage=0',
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                console.log("Ответ сервера:", response.data);
+            } catch (error) {
+                console.error("Ошибка загрузки PDF файла:", error);
+            }
+        } else if (fileType === 'docx') {
+            setDocxData(file);
+
+            // Формируем данные для отправки
+            const formData = new FormData();
+            formData.append("avatar", file);
+
+            try {
+                const response = await axios.post(
+                    'http://localhost:8080/data/docx-file',
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        },
+                    }
+                );
+                console.log("Ответ сервера для DOCX:", response.data);
+            } catch (error) {
+                console.error("Ошибка загрузки DOCX файла:", error);
+            }
         } else if (fileType === 'txt') {
             const reader = new FileReader();
             reader.onload = (event) => {
                 setTxtData(event.target.result); // Store the content of the TXT file
             };
             reader.readAsText(file);
+        } else {
+            alert("Выберите файл формата PDF, DOCX или TXT.");
         }
-
-        console.log(file);
     };
 
     const handleTxtChange = (e) => {
         setTxtData(e.target.value); // Update txtData as the user types
     };
 
-    const handleSubmit = () => {
-        // Handle submission, for example, log the text data
+    const handleSubmit = async () => {
         console.log("Submitted text:", txtData);
-
-        // You can replace this with actual submission logic (e.g., send to server)
-        alert("Text submitted successfully!");
+        try {
+            await axios.post('http://localhost:8080/data/text', {
+                "textData": txtData
+            });
+            alert("Текст успешно отправлен!");
+        } catch (error) {
+            console.error("Ошибка отправки текста:", error);
+        }
     };
 
     return (
         <div className="loader-container">
-
             {/* Загрузка файлов */}
             <div className="settings-item">
-                <label htmlFor="fileUpload">Загрузите файл для обучения ассистента (PDF/Excel/TXT):</label>
-                <input type="file" id="fileUpload" accept=".pdf,.xls,.xlsx,.txt" onChange={handleFileUpload} />
+                <label htmlFor="fileUpload">Загрузите файл (PDF/DOCX/TXT):</label>
+                <input type="file" id="fileUpload" accept=".pdf,.docx,.txt" onChange={handleFileUpload} />
             </div>
-
-            {/* Просмотр Excel */}
-            {excelData.length > 0 && (
-                <div className="excel-data">
-                    <h3>Данные из Excel:</h3>
-                    <table>
-                        <thead>
-                        <tr>
-                            {Object.keys(excelData[0]).map((key, index) => (
-                                <th key={index}>{key}</th>
-                            ))}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {excelData.map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {Object.values(row).map((value, colIndex) => (
-                                    <td key={colIndex}>{value}</td>
-                                ))}
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            )}
 
             {/* Просмотр TXT */}
             {txtData && (
                 <div className="txt-data">
                     <h3>Содержимое TXT файла:</h3>
-                    <pre>{txtData}</pre> {/* Display the TXT content */}
+                    <pre>{txtData}</pre>
                 </div>
             )}
 
-            {/* Write custom TXT */}
+            {/* Написание текста */}
             <div className="txt-editor">
                 <h3>Напишите свой текст:</h3>
                 <textarea
@@ -100,11 +108,10 @@ const FileLoader = () => {
                 />
             </div>
 
-            {/* Submit Button */}
+            {/* Кнопка отправки */}
             <div className="submit-button">
                 <button onClick={handleSubmit}>Отправить</button>
             </div>
-
         </div>
     );
 };
