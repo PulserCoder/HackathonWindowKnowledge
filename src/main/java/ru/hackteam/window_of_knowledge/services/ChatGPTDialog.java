@@ -18,16 +18,20 @@ import java.util.Map;
 public class ChatGPTDialog {
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ChatGPTClient chatGPTClient;
 
     @Autowired
     public ChatGPTDialog(
-            @Qualifier("saveConversation") RedisTemplate<String, Object> redisTemplate) {
+            @Qualifier("saveConversation") RedisTemplate<String, Object> redisTemplate, ChatGPTClient chatGPTClient) {
         this.redisTemplate = redisTemplate;
+        this.chatGPTClient = chatGPTClient;
     }
 
     public String getRelevantAnswer(String question, List<String> answers) {
         StringBuilder result = new StringBuilder();
-
+        for (String answer : answers) {
+            System.out.println("answer = " + answer);
+        }
         // Создаем список сообщений для текущего запроса
         List<Map<String, Object>> conversationHistory = new ArrayList<>();
 
@@ -42,32 +46,41 @@ public class ChatGPTDialog {
                 // Добавляем пользовательское сообщение с вопросом и ответом
                 Map<String, Object> userMessage = new HashMap<>();
                 userMessage.put("role", "user");
-                userMessage.put("content", "Текст: " + "\n" +  answer);
+                userMessage.put("content", "Текст: " + "\n" +  answer + "\n" + "Вопрос:" + question);
                 conversationHistory.add(userMessage);
 
                 // Отправляем запрос в GPT
-                String gptResponse = ChatGPTClient.sendRequest(conversationHistory);
-
+                String gptResponse = chatGPTClient.sendRequest(conversationHistory);
                 // Добавляем ответ GPT к результатам
                 if (gptResponse.contains("+")) {
                     result.append(" ");
-                    result.append(gptResponse);
+                    result.append(answer);
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
-                result.append("E"); // Добавляем 'E' в случае ошибки
+                result.append("E");
             }
         }
-
+        System.out.println("result = " + result);
         return result.toString();
     }
 
-    public String sendMessage(String prompt, String conversationId) throws Exception {
+    public String sendMessage(String prompt, String conversationId, String question) throws Exception {
         List<Map<String, Object>> conversationHistory = getConversationHistory(conversationId);
 
-        addUserMessageToHistory(conversationHistory, prompt);
-        String response = ChatGPTClient.sendRequest(conversationHistory);
+        Map<String, Object> modifiedMessage = Map.of(
+                "role", "system",
+                "content", prompt
+        );
+        conversationHistory.add(modifiedMessage);
+
+        Map<String, Object> modifiedMessage1 = Map.of(
+                "role", "user",
+                "content", question
+        );
+        conversationHistory.add(modifiedMessage1);
+        String response = chatGPTClient.sendRequest(conversationHistory);
         addAssistantMessageToHistory(conversationHistory, response);
         saveConversationToRedis(conversationId, conversationHistory);
 
@@ -105,5 +118,4 @@ public class ChatGPTDialog {
     private void saveConversationToRedis(String conversationId, List<Map<String, Object>> conversationHistory) {
         redisTemplate.opsForValue().set(conversationId, conversationHistory);
     }
-
 }

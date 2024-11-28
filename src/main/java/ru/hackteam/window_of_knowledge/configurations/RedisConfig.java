@@ -31,13 +31,15 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> saveConversation(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> saveConversation(
+
+    ) {
         LettuceConnectionFactory factory = new LettuceConnectionFactory();
         factory.setDatabase(1);
         factory.afterPropertiesSet();
 
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory);
+        template.setConnectionFactory(factory);
 
         // Используем Jackson2JsonRedisSerializer для сериализации/десериализации
         Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
@@ -49,5 +51,4 @@ public class RedisConfig {
 
         return template;
     }
-
 }

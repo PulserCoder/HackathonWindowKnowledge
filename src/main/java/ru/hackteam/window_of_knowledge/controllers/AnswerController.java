@@ -29,7 +29,7 @@ public class AnswerController {
     @PostMapping(path = "/ask/{assistant_id}/{conversation_id}")
     public String answerForUserQuestion(@RequestBody Question question,
                                         @PathVariable("assistant_id") String assistantId,
-                                        @PathVariable("conversation_id") String conversationId) throws IOException, InterruptedException {
+                                        @PathVariable("conversation_id") String conversationId) throws Exception {
         return answerService.getAnswer(question, assistantId, conversationId);
     }
 }

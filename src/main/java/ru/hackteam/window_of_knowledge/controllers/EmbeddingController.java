@@ -35,7 +35,7 @@ public class EmbeddingController {
         return embeddingService.getEmbeddings(id);
     }
 
-    @PostMapping("/find-relevant")
+    @GetMapping("/find-relevant")
     public List<Map<String, Object>> findRelevantTexts(@RequestParam String id, @RequestParam String text) {
         try {
             return embeddingService.findTopRelevantTexts(id, text);

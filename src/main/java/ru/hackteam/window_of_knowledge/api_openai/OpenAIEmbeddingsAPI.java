@@ -51,12 +51,10 @@ public class OpenAIEmbeddingsAPI {
             throw new RuntimeException("Ошибка при запросе к OpenAI API: " + response.body());
         }
 
-        // Разбор JSON-ответа
         Map<String, Object> responseMap = objectMapper.readValue(response.body(), Map.class);
         Map<String, Object> data = (Map<String, Object>) ((java.util.List<?>) responseMap.get("data")).get(0);
         java.util.List<Double> embeddingList = (java.util.List<Double>) data.get("embedding");
 
-        // Преобразование списка в массив
         return embeddingList.stream().mapToDouble(Double::doubleValue).toArray();
 
 
