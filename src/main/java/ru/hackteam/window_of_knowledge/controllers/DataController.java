@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.hackteam.window_of_knowledge.models.TextData;
 import ru.hackteam.window_of_knowledge.services.*;
 
+import java.io.IOException;
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "data")
 public class DataController {
@@ -14,31 +17,43 @@ public class DataController {
     private ExtractData extractData;
     @Autowired
     public TextServiceImpl textServiceImpl;
+    @Autowired
+    public ExcelServiceImpl excelServiceImpl;
 
-    @PostMapping(value = "excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveExcelFormat(@RequestParam MultipartFile avatar) {
-        extractData = new ExcelServiceImpl();
-        return extractData.saveDataToBd(avatar);
-    }
+    @Autowired
+    public DocxService docxService;
 
-    @PostMapping(value = "notion", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveNotionFormat(@RequestParam MultipartFile avatar) {
-        extractData = new NotionServiceImpl();
-        return extractData.saveDataToBd(avatar);
-    }
+    @Autowired
+    public TextFileServiceImpl textFileService;
+
+    @Autowired
+    private PdfService pdfService;
+
+
 
     @PostMapping(value = "text-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveTexFiletFormat(@RequestParam MultipartFile avatar) {
-        extractData = new TextFileServiceImpl();
-        return extractData.saveDataToBd(avatar);
+    public List<String> saveTexFiletFormat(@RequestParam MultipartFile avatar) throws IOException, InterruptedException {
+        return textFileService.saveDataToBd(avatar);
     }
 
     @PostMapping(path = "text")
-    public String saveTextFormat(@RequestBody TextData textData) {
+    public List<String> saveTextFormat(@RequestBody TextData textData) throws IOException, InterruptedException {
         return textServiceImpl.saveTextToBd(textData);
     }
 
+
+    @PostMapping(value = "pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<String> convertPdf(@RequestParam("file") MultipartFile file, @RequestParam(value = "startPage", required = false, defaultValue = "0") Integer startPage,
+                                   @RequestParam(value = "endPage", required = false,  defaultValue = "0") Integer endPage) throws IOException, InterruptedException {
+        return pdfService.convertPdfToText(file, startPage, endPage);
+    }
+
+    @PostMapping(value = "docx-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public List<String> saveDocxFiletFormat(@RequestParam MultipartFile avatar) throws IOException, InterruptedException {
+        return docxService.processDocxFile(avatar);
+    }
+
+
+
+
 }
-
-
-

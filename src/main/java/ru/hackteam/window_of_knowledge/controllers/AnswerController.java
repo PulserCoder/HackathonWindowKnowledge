@@ -13,6 +13,7 @@ import java.util.Map;
 
 import java.io.IOException;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping(path = "question")
 @RestController
 public class AnswerController {
