@@ -20,6 +20,9 @@ public class DataController {
     public ExcelServiceImpl excelServiceImpl;
 
     @Autowired
+    public TextFileServiceImpl textFileService;
+
+    @Autowired
     private PdfService pdfService;
 
     @PostMapping(value = "excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -34,9 +37,8 @@ public class DataController {
     }
 
     @PostMapping(value = "text-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String saveTexFiletFormat(@RequestParam MultipartFile avatar) {
-        extractData = new TextFileServiceImpl();
-        return extractData.saveDataToBd(avatar);
+    public List<String> saveTexFiletFormat(@RequestParam MultipartFile avatar) {
+        return textFileService.saveDataToBd(avatar);
     }
 
     @PostMapping(path = "text")
