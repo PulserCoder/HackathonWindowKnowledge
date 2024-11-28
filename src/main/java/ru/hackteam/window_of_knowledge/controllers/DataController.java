@@ -1,4 +1,4 @@
-package ru.hackteam.window_of_knowledge.controller;
+package ru.hackteam.window_of_knowledge.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,6 +27,9 @@ public class DataController {
 
     @Autowired
     private PdfService pdfService;
+
+    @Autowired
+    private UrlTextService urlTextService;
 
     @PostMapping(value = "excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String saveExcelFormat(@RequestParam MultipartFile avatar, @RequestParam(required = false) String startCell1, @RequestParam(required = false) String startCell2) {
@@ -59,6 +62,11 @@ public class DataController {
     @PostMapping(value = "docx-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public List<String> saveDocxFiletFormat(@RequestParam MultipartFile avatar) {
         return docxService.processDocxFile(avatar);
+    }
+
+    @PostMapping(path = "url")
+    public String saveUrlTest(@RequestParam String url){
+        return urlTextService.getTextFromUrl(url);
     }
 
 
